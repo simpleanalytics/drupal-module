@@ -21,7 +21,6 @@ function simple_analytics_custom_page_attachments(array &$page) {
   $ignoreAdmins = $config->get('ignore_admin');
   $dataCollectDntTrack = $config->get('do_not_track_visits');
   $dataAutoCollectView = $config->get('collect_page_views');
-  $automatedEvents = $config->get('collected_automated_events');
   $extraSettings = $config->get('extrasettings');
   $hostName = $config->get('data_hostname');
   $dataSaGlobal = $config->get('data_sa_global');
