@@ -1,0 +1,271 @@
+<?php
+use Symfony\Component\HttpFoundation\JsonResponse;
+/**
+ * @file
+ * Integrates with usajobs.gov search api.
+ */
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Render\Markup;
+
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Insert JavaScript to the appropriate scope/region of the page.
+ */
+function simple_analytics_custom_page_attachments(array &$page) {
+  $config = \Drupal::config('simple_analytics_custom.settings');
+  $customDomains = $config->get('overwrite_domain');
+  $dataMode = $config->get('hash_mode');
+  $ignorePages = $config->get('data_ignore_pages');
+  $ignoreAdmins = $config->get('ignore_admin');
+  $dataCollectDntTrack = $config->get('do_not_track_visits');
+  $dataAutoCollectView = $config->get('collect_page_views');
+  $automatedEvents = $config->get('collected_automated_events');
+  $extraSettings = $config->get('extrasettings');
+  $hostName = $config->get('data_hostname');
+  $dataSaGlobal = $config->get('data_sa_global');
+  $dataFullUrl = $config->get('data_full_urls');
+  $dataTitle = $config->get('data_use_title');
+  $enabled = $config->get('enabling');
+  $emailClicks = $config->get('email_clicks');
+  $download = $config->get('downloads');
+  $outbound = $config->get('outbound_links');
+  $dataExtension = $config->get('data_extensions');
+  $extent = implode(", ",$dataExtension);
+
+  $extra = unserialize($extraSettings);
+foreach ($extra as $key => $value) {
+  $extraKey = $value['key'];
+  $extraValue = $value['value'];
+}
+$admincheck = false;
+$adminRoute = \Drupal::service('router.admin_context')->isAdminRoute();
+if($adminRoute == true && $ignoreAdmins == 1){
+    $admincheck = true;
+}
+if($admincheck != true && $enabled == 1){
+/* Event Script */
+if($dataSaGlobal){
+    $script = 'window."'.$dataSaGlobal.'"||function(){var a=[].slice.call(arguments);window."'.$dataSaGlobal.'".q?window."'.$dataSaGlobal.'".q.push(a):window."'.$dataSaGlobal.'".q=[a]};';
+
+   $page['#attached']['html_head']['script_event_mode_global'] = [
+         [
+           '#tag' => 'script',
+           '#attributes' => [
+                    'data-sa-global'=> "$dataSaGlobal",
+                    'async' => TRUE,
+                    'src' => 'https://scripts.simpleanalyticscdn.com/latest.js'
+                ]
+      ],
+       'event_mode_global_script',
+     ]; 
+}else{
+   $script = 'window.sa_event||function(){var a=[].slice.call(arguments);window.sa_event.q?window.sa_event.q.push(a):window.sa_event.q=[a]};';
+    $script .= 'function saLoaded(){if (window.sa_pageview) window.sa_pageview(window.location.pathname)};';
+}
+  $page['#attached']['html_head']['data_global'] = [
+      [
+        '#tag' => 'script',
+        '#value' => $script,
+      ],
+      'data_global_script',
+    ];
+  if($emailClicks == 1){
+     $page['#attached']['html_head']['script_event_mode'] = [
+           [
+             '#tag' => 'script',
+             '#attributes' => [
+                     'data-collect'=> "emails",
+                      'data-use-title'=> "$dataTitle",
+                      'data-full-urls'=> "$dataFullUrl",
+                      'async' => TRUE,
+                      'src' => 'https://scripts.simpleanalyticscdn.com/auto-events.js'
+                  ]
+        ],
+         'event_mode_script',
+       ]; 
+  }
+  if($download == 1){
+     $page['#attached']['html_head']['script_event_mode'] = [
+           [
+             '#tag' => 'script',
+             '#attributes' => [
+                     'data-collect'=> "downloads",
+                      'data-extensions'=> "$extent",
+                      'data-use-title'=> "$dataTitle",
+                      'data-full-urls'=> "$dataFullUrl",
+                      'async' => TRUE,
+                      'src' => 'https://scripts.simpleanalyticscdn.com/auto-events.js'
+                  ]
+        ],
+         'event_mode_script',
+        ];  
+  }
+  if($outbound == 1){
+     $page['#attached']['html_head']['script_event_mode'] = [
+           [
+             '#tag' => 'script',
+             '#attributes' => [
+                     'data-collect'=> "outbound",
+                      'data-use-title'=> "$dataTitle",
+                      'data-full-urls'=> "$dataFullUrl",
+                      'async' => TRUE,
+                      'src' => 'https://scripts.simpleanalyticscdn.com/auto-events.js'
+                  ]
+        ],
+         'event_mode_script',
+        ];  
+  }
+  if($outbound==1 && $emailClicks==1){
+       $page['#attached']['html_head']['script_event_mode'] = [
+        [
+             '#tag' => 'script',
+             '#attributes' => [
+                     'data-collect'=> "outbound,emails",
+                      'data-use-title'=> "$dataTitle",
+                      'data-full-urls'=> "$dataFullUrl",
+                      'async' => TRUE,
+                      'src' => 'https://scripts.simpleanalyticscdn.com/auto-events.js'
+                  ]
+        ],
+        'event_mode_script',
+      ];
+  }
+  if($outbound==1 && $download==1){
+       $page['#attached']['html_head']['script_event_mode'] = [
+        [
+             '#tag' => 'script',
+             '#attributes' => [
+                     'data-collect'=> "outbound,downloads",
+                      'data-extensions'=> "$extent",
+                      'data-use-title'=> "$dataTitle",
+                      'data-full-urls'=> "$dataFullUrl",
+                      'async' => TRUE,
+                      'src' => 'https://scripts.simpleanalyticscdn.com/auto-events.js'
+                  ]
+        ],
+        'event_mode_script',
+      ];
+  }
+  if($emailClicks==1 && $download==1){
+       $page['#attached']['html_head']['script_event_mode'] = [
+        [
+             '#tag' => 'script',
+             '#attributes' => [
+                     'data-collect'=> "emails,downloads",
+                      'data-extensions'=> "$extent",
+                      'data-use-title'=> "$dataTitle",
+                      'data-full-urls'=> "$dataFullUrl",
+                      'async' => TRUE,
+                      'src' => 'https://scripts.simpleanalyticscdn.com/auto-events.js'
+                  ]
+        ],
+        'event_mode_script',
+      ];
+  }
+  if($outbound==1 && $emailClicks==1 && $download==1){
+       $page['#attached']['html_head']['script_event_mode'] = [
+        [
+             '#tag' => 'script',
+             '#attributes' => [
+                     'data-collect'=> "outbound,emails,downloads",
+                      'data-extensions'=> "$extent",
+                      'data-use-title'=> "$dataTitle",
+                      'data-full-urls'=> "$dataFullUrl",
+                      'async' => TRUE,
+                      'src' => 'https://scripts.simpleanalyticscdn.com/auto-events.js'
+                  ]
+        ],
+        'event_mode_script',
+      ];
+  }
+
+ }
+
+}
+function simple_analytics_custom_page_top(array &$page_top) {
+   $config = \Drupal::config('simple_analytics_custom.settings');
+  $customDomains = $config->get('overwrite_domain');
+  $dataMode = $config->get('hash_mode');
+  $ignorePages = $config->get('data_ignore_pages');
+  $ignoreAdmins = $config->get('ignore_admin');
+  $dataCollectDntTrack = $config->get('do_not_track_visits');
+  $dataAutoCollectView = $config->get('collect_page_views');
+  $enabled = $config->get('enabling');
+  $automatedEvents = $config->get('collected_automated_events');
+  $extraSettings = $config->get('extrasettings');
+  $hostName = $config->get('data_hostname');
+  $dataSaGlobal = $config->get('data_sa_global');
+   $sub_script =  '';
+    $extra = unserialize($extraSettings);
+    foreach ($extra as $key => $value) {
+      $extraKey = $value['key'];
+      $extraValue = $value['value'];
+    }
+$page_top['page_top'] = [];
+$admincheck = false;
+$adminRoute = \Drupal::service('router.admin_context')->isAdminRoute();
+if($adminRoute == true && $ignoreAdmins == 1){
+    $admincheck = true;
+}
+if($admincheck != true && $enabled == 1){
+   if($dataMode == 1){
+        $sub_script .= 'data-mode="hash" '; 
+   }
+   if(!empty($hostName)){
+        $sub_script .= 'data-hostname="'.$hostName.'" ';
+   }
+   if(!empty($dataSaGlobal)){
+     $sub_script .= 'data-sa-global="'.$dataSaGlobal.'" ';
+   }
+   if(!empty($dataAutoCollectView)){
+     $sub_script .= 'data-auto-collect="'.$dataAutoCollectView.'" ';
+   }
+   if(!empty($dataCollectDntTrack)){
+     $sub_script .= 'data-collect-dnt="'.$dataCollectDntTrack.'" ';
+   }
+   if(!empty($ignorePages)){
+     $sub_script .= 'data-ignore-pages="'.$ignorePages.'" ';
+   }
+   if(!empty($extraKey)){
+     $sub_script .= $extraKey;
+   }
+   if(!empty($extraValue)){
+     $sub_script .= ' = "'.$extraValue.'" ';
+   }
+   $autoscript_tag_markup = '';
+  if($automatedEvents == 1){
+  $autoscript_tag_markup = '<script async defer src=https://scripts.simpleanalyticscdn.com/plus.js ></script>';
+  }else{
+  $autoscript_tag_markup = '<script async defer src=https://scripts.simpleanalyticscdn.com/latest.js ></script>';
+  }
+  if(isset($autoscript_tag_markup)){
+       $page_top['page_top'][]['#markup'] =  Markup::create($autoscript_tag_markup);
+    } 
+
+   $collectionScripts = '';
+   if($dataAutoCollectView == 0){
+    $collectionScripts .= '<script>function saLoaded(){if (window.sa_pageview) window.sa_pageview(window.location.pathname)};</script>';
+     $collectionScripts .= '<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>';
+     $sub_script .= 'onload="saLoaded()"';
+   }
+
+   $embed_script = '<script ' .$sub_script. ' async defer src=https://scripts.simpleanalyticscdn.com/latest.js></script>';
+    if(isset($embed_script)){
+       $page_top['page_top']['#markup'] =  Markup::create($embed_script);
+    }
+    if (!empty($collectionScripts)) {
+       $page_top['page_top'][]['#markup'] =  Markup::create($collectionScripts);
+    }
+
+  if(!empty($customDomains)){
+  $noscript_tag_markup = '<script async defer src=https://"'.$customDomains.'"/latest.js></script>';
+  $noscript_tag_markup .= '<noscript><img src="https://$customDomains/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>';
+    if(isset($noscript_tag_markup)){
+       $page_top['page_top'][]['#markup'] =  Markup::create($noscript_tag_markup);
+    }
+  }
+
+}
+}

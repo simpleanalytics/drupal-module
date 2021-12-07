@@ -1,0 +1,8 @@
+enabling: true
+ignore_admin: true
+collect_page_views: true
+data_sa_global: 'sa_event'
+data_use_title: false
+data_full_urls: false
+data_extensions: 'pdf,csv,docx,xlsx,zip'
+data_ignore_pages: []

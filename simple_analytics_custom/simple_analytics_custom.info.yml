@@ -1,0 +1,6 @@
+name: Simple Analytics Custom
+description: 'Simple Analytics module'
+core: 8.x
+core_version_requirement: ^8 || ^9
+type: module
+configure: simple_analytics_custom.settings

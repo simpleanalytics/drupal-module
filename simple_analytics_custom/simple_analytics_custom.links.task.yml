@@ -1,0 +1,19 @@
+simple_analytics_custom.settings:
+  route_name: simple_analytics_custom.settings.form
+  title: Settings
+  base_route: simple_analytics_custom
+  weight: 1
+
+simple_analytics_custom.advanced:
+  route_name: simple_analytics_custom.advanced.form
+  title: Advanced Settings
+  base_route: simple_analytics_custom
+  weight: 2
+
+simple_analytics_custom.events:
+  route_name: simple_analytics_custom.events.form
+  title: Events
+  base_route: simple_analytics_custom
+  weight: 3
+
+
