@@ -31,6 +31,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
+    $form['#cache'] = ['max-age' => 0];
     $config = $this->config('simple_analytics_custom.settings');
     $form['event_settings'] = array(
       '#type' => 'details',

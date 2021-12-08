@@ -14,17 +14,11 @@ use Drupal\Core\Render\Markup;
  * Insert JavaScript to the appropriate scope/region of the page.
  */
 function simple_analytics_custom_page_attachments(array &$page) {
+  \Drupal::service('cache.render')->invalidateAll();
   $config = \Drupal::config('simple_analytics_custom.settings');
-  $customDomains = $config->get('overwrite_domain');
-  $dataMode = $config->get('hash_mode');
-  $ignorePages = $config->get('data_ignore_pages');
-  $ignoreAdmins = $config->get('ignore_admin');
-  $dataCollectDntTrack = $config->get('do_not_track_visits');
-  $dataAutoCollectView = $config->get('collect_page_views');
-  $extraSettings = $config->get('extrasettings');
-  $hostName = $config->get('data_hostname');
   $dataSaGlobal = $config->get('data_sa_global');
   $dataFullUrl = $config->get('data_full_urls');
+  $ignoreAdmins = $config->get('ignore_admin');
   $dataTitle = $config->get('data_use_title');
   $enabled = $config->get('enabling');
   $emailClicks = $config->get('email_clicks');
@@ -32,12 +26,6 @@ function simple_analytics_custom_page_attachments(array &$page) {
   $outbound = $config->get('outbound_links');
   $dataExtension = $config->get('data_extensions');
   $extent = implode(", ",$dataExtension);
-
-  $extra = unserialize($extraSettings);
-foreach ($extra as $key => $value) {
-  $extraKey = $value['key'];
-  $extraValue = $value['value'];
-}
 $admincheck = false;
 $adminRoute = \Drupal::service('router.admin_context')->isAdminRoute();
 if($adminRoute == true && $ignoreAdmins == 1){
@@ -46,29 +34,20 @@ if($adminRoute == true && $ignoreAdmins == 1){
 if($admincheck != true && $enabled == 1){
 /* Event Script */
 if($dataSaGlobal){
-    $script = 'window."'.$dataSaGlobal.'"||function(){var a=[].slice.call(arguments);window."'.$dataSaGlobal.'".q?window."'.$dataSaGlobal.'".q.push(a):window."'.$dataSaGlobal.'".q=[a]};';
-
-   $page['#attached']['html_head']['script_event_mode_global'] = [
-         [
-           '#tag' => 'script',
-           '#attributes' => [
-                    'data-sa-global'=> "$dataSaGlobal",
-                    'async' => TRUE,
-                    'src' => 'https://scripts.simpleanalyticscdn.com/latest.js'
-                ]
-      ],
-       'event_mode_global_script',
-     ]; 
-}else{
-   $script = 'window.sa_event||function(){var a=[].slice.call(arguments);window.sa_event.q?window.sa_event.q.push(a):window.sa_event.q=[a]};';
-    $script .= 'function saLoaded(){if (window.sa_pageview) window.sa_pageview(window.location.pathname)};';
-}
+    $script = 'window.'.$dataSaGlobal.'||function(){var a=[].slice.call(arguments);window.'.$dataSaGlobal.'.q?window.'.$dataSaGlobal.'.q.push(a):window.'.$dataSaGlobal.'.q=[a]};';
+  }else{
+      $script = 'window.sa_event=window.sa_event||function(){var a=[].slice.call(arguments);window.sa_event.q?window.sa_event.q.push(a):window.sa_event.q=[a]};';
+      $script .= 'function saLoaded(){if (window.sa_pageview) window.sa_pageview(window.location.pathname)};';
+  }
   $page['#attached']['html_head']['data_global'] = [
       [
         '#tag' => 'script',
-        '#value' => $script,
-      ],
-      'data_global_script',
+        '#attributes' => [
+          'type' => 'text/javascript',
+        ],
+       '#value' => \Drupal\Core\Render\Markup::create($script),
+      ], 
+       'data_global_snippet',
     ];
   if($emailClicks == 1){
      $page['#attached']['html_head']['script_event_mode'] = [
@@ -184,6 +163,7 @@ if($dataSaGlobal){
 
 }
 function simple_analytics_custom_page_top(array &$page_top) {
+  \Drupal::service('cache.render')->invalidateAll();
    $config = \Drupal::config('simple_analytics_custom.settings');
   $customDomains = $config->get('overwrite_domain');
   $dataMode = $config->get('hash_mode');
@@ -198,10 +178,12 @@ function simple_analytics_custom_page_top(array &$page_top) {
   $dataSaGlobal = $config->get('data_sa_global');
    $sub_script =  '';
     $extra = unserialize($extraSettings);
+     if(is_array($extra)) {
     foreach ($extra as $key => $value) {
       $extraKey = $value['key'];
       $extraValue = $value['value'];
     }
+  }
 $page_top['page_top'] = [];
 $admincheck = false;
 $adminRoute = \Drupal::service('router.admin_context')->isAdminRoute();
@@ -233,26 +215,26 @@ if($admincheck != true && $enabled == 1){
    if(!empty($extraValue)){
      $sub_script .= ' = "'.$extraValue.'" ';
    }
-   $autoscript_tag_markup = '';
-  if($automatedEvents == 1){
-  $autoscript_tag_markup = '<script async defer src=https://scripts.simpleanalyticscdn.com/plus.js ></script>';
-  }else{
+  $autoscript_tag_markup = '';
+  if($automatedEvents == 0){
   $autoscript_tag_markup = '<script async defer src=https://scripts.simpleanalyticscdn.com/latest.js ></script>';
+  }else{
+  $autoscript_tag_markup = '<script async defer src=https://scripts.simpleanalyticscdn.com/plus.js ></script>';
   }
   if(isset($autoscript_tag_markup)){
-       $page_top['page_top'][]['#markup'] =  Markup::create($autoscript_tag_markup);
-    } 
+       $page_top['page_top']['#markup'] =  Markup::create($autoscript_tag_markup);
+    }  
 
    $collectionScripts = '';
    if($dataAutoCollectView == 0){
     $collectionScripts .= '<script>function saLoaded(){if (window.sa_pageview) window.sa_pageview(window.location.pathname)};</script>';
      $collectionScripts .= '<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>';
      $sub_script .= 'onload="saLoaded()"';
+     $sub_script .= 'data-auto-collect="false" ';
    }
-
-   $embed_script = '<script ' .$sub_script. ' async defer src=https://scripts.simpleanalyticscdn.com/latest.js></script>';
+    $embed_script = '<script ' .$sub_script. ' async defer src=https://scripts.simpleanalyticscdn.com/latest.js></script>';
     if(isset($embed_script)){
-       $page_top['page_top']['#markup'] =  Markup::create($embed_script);
+       $page_top['page_top'][]['#markup'] =  Markup::create($embed_script);
     }
     if (!empty($collectionScripts)) {
        $page_top['page_top'][]['#markup'] =  Markup::create($collectionScripts);
