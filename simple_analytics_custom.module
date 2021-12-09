@@ -1,9 +1,5 @@
 <?php
 use Symfony\Component\HttpFoundation\JsonResponse;
-/**
- * @file
- * Integrates with usajobs.gov search api.
- */
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Render\Markup;
 
@@ -25,13 +21,20 @@ function simple_analytics_custom_page_attachments(array &$page) {
   $download = $config->get('downloads');
   $outbound = $config->get('outbound_links');
   $dataExtension = $config->get('data_extensions');
-  $extent = implode(", ",$dataExtension);
-$admincheck = false;
-$adminRoute = \Drupal::service('router.admin_context')->isAdminRoute();
-if($adminRoute == true && $ignoreAdmins == 1){
-    $admincheck = true;
+  if(isset($extent)){
+    $extent = implode(", ",$dataExtension);
+  }
+  
+$adminIgnore = false;
+if($ignoreAdmins == 1){
+  $roles = \Drupal::currentUser()->getRoles();
+  if (in_array('administrator', $roles)) {
+    $adminIgnore = true;
+  }  
 }
-if($admincheck != true && $enabled == 1){
+
+if($adminIgnore != true){
+if($enabled == 1){
 /* Event Script */
 if($dataSaGlobal){
     $script = 'window.'.$dataSaGlobal.'||function(){var a=[].slice.call(arguments);window.'.$dataSaGlobal.'.q?window.'.$dataSaGlobal.'.q.push(a):window.'.$dataSaGlobal.'.q=[a]};';
@@ -160,6 +163,7 @@ if($dataSaGlobal){
   }
 
  }
+}
 
 }
 function simple_analytics_custom_page_top(array &$page_top) {
@@ -185,12 +189,16 @@ function simple_analytics_custom_page_top(array &$page_top) {
     }
   }
 $page_top['page_top'] = [];
-$admincheck = false;
-$adminRoute = \Drupal::service('router.admin_context')->isAdminRoute();
-if($adminRoute == true && $ignoreAdmins == 1){
-    $admincheck = true;
+$adminIgnore = false;
+if($ignoreAdmins == 1){
+  $roles = \Drupal::currentUser()->getRoles();
+  if (in_array('administrator', $roles)) {
+    $adminIgnore = true;
+  }  
 }
-if($admincheck != true && $enabled == 1){
+
+if($adminIgnore != true){
+if($enabled == 1){
    if($dataMode == 1){
         $sub_script .= 'data-mode="hash" '; 
    }
@@ -215,16 +223,6 @@ if($admincheck != true && $enabled == 1){
    if(!empty($extraValue)){
      $sub_script .= ' = "'.$extraValue.'" ';
    }
-  $autoscript_tag_markup = '';
-  if($automatedEvents == 0){
-  $autoscript_tag_markup = '<script async defer src=https://scripts.simpleanalyticscdn.com/latest.js ></script>';
-  }else{
-  $autoscript_tag_markup = '<script async defer src=https://scripts.simpleanalyticscdn.com/plus.js ></script>';
-  }
-  if(isset($autoscript_tag_markup)){
-       $page_top['page_top']['#markup'] =  Markup::create($autoscript_tag_markup);
-    }  
-
    $collectionScripts = '';
    if($dataAutoCollectView == 0){
     $collectionScripts .= '<script>function saLoaded(){if (window.sa_pageview) window.sa_pageview(window.location.pathname)};</script>';
@@ -232,21 +230,27 @@ if($admincheck != true && $enabled == 1){
      $sub_script .= 'onload="saLoaded()"';
      $sub_script .= 'data-auto-collect="false" ';
    }
+  $autoscript_tag_markup = '';
+  if($automatedEvents == 1){
+  $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src=https://scripts.simpleanalyticscdn.com/plus.js ></script>';
+  }elseif($customDomains){
+  $noscript_tag_markup = '<script ' .$sub_script. ' async defer src=https://'.$customDomains.'/latest.js></script>';
+  $noscript_tag_markup .= '<noscript><img src="https://'.$customDomains.'/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>';
+    if(isset($noscript_tag_markup)){
+       $page_top['page_top'][]['#markup'] =  Markup::create($noscript_tag_markup);
+    }
+  }else{
     $embed_script = '<script ' .$sub_script. ' async defer src=https://scripts.simpleanalyticscdn.com/latest.js></script>';
     if(isset($embed_script)){
        $page_top['page_top'][]['#markup'] =  Markup::create($embed_script);
     }
+  }
+    if(isset($autoscript_tag_markup)){
+       $page_top['page_top']['#markup'] =  Markup::create($autoscript_tag_markup);
+    } 
     if (!empty($collectionScripts)) {
        $page_top['page_top'][]['#markup'] =  Markup::create($collectionScripts);
     }
-
-  if(!empty($customDomains)){
-  $noscript_tag_markup = '<script async defer src=https://"'.$customDomains.'"/latest.js></script>';
-  $noscript_tag_markup .= '<noscript><img src="https://$customDomains/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>';
-    if(isset($noscript_tag_markup)){
-       $page_top['page_top'][]['#markup'] =  Markup::create($noscript_tag_markup);
-    }
-  }
-
+ }
 }
 }

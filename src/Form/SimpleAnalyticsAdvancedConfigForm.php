@@ -31,8 +31,6 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
-    \Drupal::service('cache.render')->invalidateAll();
-    $form['#cache'] = ['max-age' => 0];
     $config = $this->config('simple_analytics_custom.settings');
     $form['advanced_settings'] = array(
       '#type' => 'details',
@@ -203,6 +201,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
         'wrapper' => 'names-fieldset-wrapper',
       ],
     ];
+    $form['#cache'] = ['max-age' => 0];
     return parent::buildForm($form, $form_state);
   }
   /**
@@ -226,7 +225,6 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
   }
   public function submitForm(array &$form, FormStateInterface $form_state) 
   {
-    \Drupal::service('cache.render')->invalidateAll();
        $values = $form_state->getValues();
        $extraSettings = '';
        if(isset($values['extra_settings']['fieldset']['settings']) && !empty($values['extra_settings']['fieldset']['settings'])){

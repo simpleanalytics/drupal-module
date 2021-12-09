@@ -31,8 +31,6 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
-    \Drupal::service('cache.render')->invalidateAll();
-    $form['#cache'] = ['max-age' => 0];
     $config = $this->config('simple_analytics_custom.settings');
     $form['event_settings'] = array(
       '#type' => 'details',
@@ -118,7 +116,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
       '#required' => FALSE,
       '#default_value' => $config->get('data_full_urls'),
     ];
-
+    $form['#cache'] = ['max-age' => 0];
     return parent::buildForm($form, $form_state);
   }
 
@@ -128,7 +126,6 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) 
   {
-    \Drupal::service('cache.render')->invalidateAll();
       $config =  $this->config('simple_analytics_custom.settings');
       $dataExtensions = explode(", ", $form_state->getValue('data_extensions'));
     foreach ($dataExtensions as $key1 => $value1) {
