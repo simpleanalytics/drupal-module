@@ -31,6 +31,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
+    \Drupal::service('cache.render')->invalidateAll();
     $form['#cache'] = ['max-age' => 0];
     $config = $this->config('simple_analytics_custom.settings');
     // $form['system_plugin_specific_settings'] = array(
@@ -54,16 +55,6 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
   );
-    // $form['system_plugin_specific_settings']['custom_domains'] = [
-    //   '#type' => 'textfield',
-    //   '#title' => $this->t('Custom Domain'),
-    //   '#required' => FALSE,
-    //   '#default_value' => $config->get('custom_domains'),
-    //   '#description' => $this->t('Please enter the custom domain.For example:simple.example.com'),
-    //   '#attributes' => array(
-    //     'placeholder' => t('Enter custom domain or leave empty..'),
-    //   ),
-    // ];
     return parent::buildForm($form, $form_state);
   }
 
@@ -72,6 +63,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) 
   {
+      \Drupal::service('cache.render')->invalidateAll();
       $config =  $this->config('simple_analytics_custom.settings');
       $dataExtensions = explode(",", $form_state->getValue('data_extensions'));
       foreach ($dataExtensions as $key1 => $value1) {
