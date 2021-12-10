@@ -37,7 +37,11 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
       '#title' => $this->t('Event Settings'),
       '#open' => FALSE,
     );
-    $form['event_settings']['collected_automated_events'] = array(
+    $form['event_settings']['automated_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Automated Events'),
+    ];
+    $form['event_settings']['automated_container']['collected_automated_events'] = array(
     '#type'    => 'checkbox',
     '#default_value' => 0,
     '#description_display' => 'before',
@@ -45,7 +49,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
   );
-    $form['event_settings']['outbound_links'] = array(
+    $form['event_settings']['automated_container']['outbound_links'] = array(
       '#type'          => 'checkbox',
       '#title'         => t('Outbound Links'),
       '#description_display' => 'before',
@@ -57,7 +61,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
          ),
        ),
     );
-    $form['event_settings']['email_clicks'] = array(
+    $form['event_settings']['automated_container']['email_clicks'] = array(
       '#type'          => 'checkbox',
       '#title'         => t('Email Clicks'),
       '#description_display' => 'before',
@@ -69,7 +73,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
          ),
        ),
     );
-    $form['event_settings']['downloads'] = array(
+    $form['event_settings']['automated_container']['downloads'] = array(
       '#type'          => 'checkbox',
       '#title'         => t('Downloads'),
       '#default_value' => $config->get('downloads'),
@@ -81,7 +85,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
          ),
        ),
     );
-   $form['event_settings']['data_extensions'] = array(
+   $form['event_settings']['automated_container']['data_extensions'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Extensions'),
         '#default_value' => $config->get('data_extensions'),
@@ -94,23 +98,36 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
              ':input[name="collected_automated_events"]' => array('checked' => TRUE),
            ),
           'required'      => array(
+             ':input[name="downloads"]' => array('checked' => TRUE),
              ':input[name="collected_automated_events"]' => array('checked' => TRUE),
            ),
          ),
       );
-    $form['event_settings']['data_sa_global'] = [
+     $form['event_settings']['global_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Data sa global'),
+    ];
+    $form['event_settings']['global_container']['data_sa_global'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Data sa global'),
       '#required' => FALSE,
       '#default_value' => $config->get('data_sa_global'),
     ];
-     $form['event_settings']['data_use_title'] = [
+    $form['event_settings']['title_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Data Use Title'),
+    ];
+     $form['event_settings']['title_container']['data_use_title'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Data Use Title'),
       '#required' => FALSE,
       '#default_value' => $config->get('data_use_title'),
     ];
-    $form['event_settings']['data_full_urls'] = [
+     $form['event_settings']['url_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Data Full Urls'),
+    ];
+    $form['event_settings']['url_container']['data_full_urls'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Data Full Urls'),
       '#required' => FALSE,

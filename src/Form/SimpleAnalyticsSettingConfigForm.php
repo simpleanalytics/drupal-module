@@ -32,7 +32,6 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
     $config = $this->config('simple_analytics_custom.settings');
-
     $form['automated_events'] = [
       '#type' => 'details',
       '#title' => $this->t('Automated Events'),
@@ -40,7 +39,11 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
       '#open' => FALSE
       ,
     ];
-    $form['automated_events']['collected_automated_events'] = array(
+    $form['automated_events']['auto_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Automated Events'),
+    ];
+    $form['automated_events']['auto_container']['collected_automated_events'] = array(
     '#type'    => 'checkbox',
     '#default_value' => 0,
     '#description_display' => 'before',
@@ -57,6 +60,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) 
   {
+      \Drupal::service('cache.render')->invalidateAll();
       $config =  $this->config('simple_analytics_custom.settings');
       $dataExtensions = explode(",", $form_state->getValue('data_extensions'));
       foreach ($dataExtensions as $key1 => $value1) {

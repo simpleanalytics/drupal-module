@@ -37,7 +37,12 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#title' => $this->t('Advanced Settings'),
       '#open' => FALSE,
     );
-    $form['advanced_settings']['do_not_track_visits'] = [
+    $form['advanced_settings']['container'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this->t('Do Not Track Visits'),
+      '#open' => FALSE,
+    );
+    $form['advanced_settings']['container']['do_not_track_visits'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Do Not Track Visits'),
       '#required' => FALSE,
@@ -45,11 +50,11 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#description' => 'The Do Not Track setting requests that a web application disables either its tracking or cross-site tracking of an individual user.We do not do that ever,so you can select to collect those visits as well. Default: off ',
       '#default_value' => $config->get('do_not_track_visits'),
     ];
-     $form['advanced_settings']['container'] = [
-      '#type' => 'container',
+     $form['advanced_settings']['ignore_container'] = [
+      '#type' => 'fieldset',
       '#title' => $this->t('Ignore Admins'),
     ];
-     $form['advanced_settings']['ignore_admin'] = [
+     $form['advanced_settings']['ignore_container']['ignore_admin'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Ignore Admins'),
       '#required' => FALSE,
@@ -72,7 +77,11 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#description' => 'Are you running your domain on different domain  than what is listed in Simple Analytics? Overwrite your domain here.Dfeault:empty.',
       '#default_value' => $config->get('overwrite_domain'),
     ];
-    $form['advanced_settings']['hash_mode'] = [
+     $form['advanced_settings']['hash_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Hash Mode'),
+    ];
+    $form['advanced_settings']['hash_container']['hash_mode'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hash Mode'),
       '#required' => FALSE,
@@ -80,7 +89,11 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#description' => 'If your website use hash (#) navigation, turn this on.On most drupal websites this is not relevant. Default empty',
       '#default_value' => $config->get('hash_mode'),
     ];
-    $form['advanced_settings']['collect_page_views'] = [
+    $form['advanced_settings']['collect_pages_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Collect Page views'),
+    ];
+    $form['advanced_settings']['collect_pages_container']['collect_page_views'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Collect Page views'),
       '#required' => FALSE,
@@ -103,7 +116,11 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#required' => FALSE,
       '#default_value' => $config->get('data_sa_global'),
     ];
-    $form['advanced_settings']['enabling'] = [
+    $form['advanced_settings']['enable_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Enabled'),
+    ];
+    $form['advanced_settings']['enable_container']['enabling'] = [
       '#type' => 'checkbox',
       '#description_display' => 'before',
       '#title' => $this->t('Enabled'),

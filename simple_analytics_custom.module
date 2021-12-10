@@ -21,6 +21,7 @@ function simple_analytics_custom_page_attachments(array &$page) {
   $download = $config->get('downloads');
   $outbound = $config->get('outbound_links');
   $dataExtension = $config->get('data_extensions');
+  $extent = '';
   if(isset($extent)){
     $extent = implode(", ",$dataExtension);
   }

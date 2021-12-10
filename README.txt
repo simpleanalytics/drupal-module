@@ -5,7 +5,6 @@ Installation
 ------------
 To install this module, place it in your modules folder and enable it on the 
 modules page.
-(Administration -> Extend).
 Path : /admin/modules
 Clear the cache after installation.
 Path:admin/config/development/performance
