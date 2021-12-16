@@ -1,0 +1,5 @@
+simple_analytics_custom.custom: 
+  version: VERSION 
+  css: 
+    base: 
+      src/css/custom.css: {} 

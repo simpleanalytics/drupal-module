@@ -31,6 +31,8 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
+
+    $form['#attached']['library'][] = 'simple_analytics_custom/simple_analytics_custom.custom';
     \Drupal::service('cache.render')->invalidateAll();
     $config = $this->config('simple_analytics_custom.settings');
     $form['automated_events'] = [
@@ -48,7 +50,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
     '#type'    => 'checkbox',
     '#default_value' => 0,
     '#description_display' => 'before',
-    '#description' => 'It will track outbound links, email addresses clicks, and amount of download files(pdf,csv,docx,xlsx).Events will be appear on events page on simpleanalytics.com.Default: on.',
+    '#description' => 'It will track outbound links, email addresses clicks, and amount of download files(pdf,csv,docx,xlsx). Events will be appear on events page on simpleanalytics.com. Default: on.',
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
   );
@@ -57,7 +59,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
       '#title' => $this->t('Overwrite domain <a href="https://docs.simpleanalytics.com/bypass-ad-blockers">(docs)</a>'),
       '#required' => FALSE,
       '#description_display' => 'before',
-      '#description' => 'Are you running your domain on different domain  than what is listed in Simple Analytics? Overwrite your domain here.Dfeault:empty.',
+      '#description' => 'Are you running your domain on different domain than what is listed in Simple Analytics? Overwrite your domain here. Default:empty.',
       '#default_value' => $config->get('overwrite_domain'),
     ];
     $form['#cache']['contexts'][] = 'session';

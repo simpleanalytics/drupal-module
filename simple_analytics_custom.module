@@ -10,7 +10,7 @@ use Drupal\Core\Render\Markup;
  * Insert JavaScript to the appropriate scope/region of the page.
  */
 function simple_analytics_custom_page_attachments(array &$page) {
-    \Drupal::service('page_cache_kill_switch')->trigger();
+  \Drupal::service('page_cache_kill_switch')->trigger();
   $config = \Drupal::config('simple_analytics_custom.settings');
   $dataSaGlobal = $config->get('data_sa_global');
   $dataFullUrl = $config->get('data_full_urls');
@@ -22,7 +22,7 @@ function simple_analytics_custom_page_attachments(array &$page) {
   $outbound = $config->get('outbound_links');
   $dataExtension = $config->get('data_extension');
   $extent = '';
-  if(isset($extent)){
+  if(isset($dataExtension) && !empty($dataExtension)){
     $extent = implode(", ",$dataExtension);
   }
   
@@ -181,11 +181,18 @@ function simple_analytics_custom_page_top(array &$page_top) {
   $extraSettings = $config->get('extrasettings');
   $dataSaGlobal = $config->get('data_sa_global');
    $sub_script =  '';
+   $sub_script_child = '';
     $extra = unserialize($extraSettings);
      if(is_array($extra)) {
     foreach ($extra as $key => $value) {
       $extraKey = $value['key'];
       $extraValue = $value['value'];
+       if(!empty($extraKey)){
+         $sub_script_child .= $extraKey;
+       }
+       if(!empty($extraValue)){
+         $sub_script_child .= ' = "'.$extraValue.'" ';
+       }
     }
   }
 $page_top['page_top'] = [];
@@ -214,11 +221,8 @@ if($enabled == 1){
    if(!empty($ignorePages)){
      $sub_script .= 'data-ignore-pages="'.$ignorePages.'" ';
    }
-   if(!empty($extraKey)){
-     $sub_script .= $extraKey;
-   }
-   if(!empty($extraValue)){
-     $sub_script .= ' = "'.$extraValue.'" ';
+   if(!empty($sub_script_child)){
+     $sub_script .= $sub_script_child;
    }
    $collectionScripts = '';
    if($dataAutoCollectView == 0){

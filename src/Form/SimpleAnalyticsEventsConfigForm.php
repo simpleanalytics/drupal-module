@@ -31,6 +31,8 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
+
+    $form['#attached']['library'][] = 'simple_analytics_custom/simple_analytics_custom.custom';
     $config = $this->config('simple_analytics_custom.settings');
     $form['event_settings'] = array(
       '#type' => 'details',
@@ -45,7 +47,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
     '#type'    => 'checkbox',
     '#default_value' => 0,
     '#description_display' => 'before',
-    '#description' => 'It will track outbound links, email addresses clicks, and amount of download files(pdf,csv,docx,xlsx).Events will be appear on events page on simpleanalytics.com.Default: on.',
+    '#description' => 'It will track outbound links, email addresses clicks, and amount of download files(pdf,csv,docx,xlsx). Events will be appear on events page on simpleanalytics.com. Default: on.',
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
   );

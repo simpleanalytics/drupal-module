@@ -2,7 +2,7 @@ simple_analytics_custom.settings.form:
   path: /admin/config/simple_analytics_settings
   defaults:
     _form: '\Drupal\simple_analytics_custom\Form\SimpleAnalyticsSettingConfigForm'
-    _title: 'Settings'
+    _title: 'Simple Analytics'
   requirements:
     _permission: 'administer_simple_analytics'
 
@@ -10,7 +10,7 @@ simple_analytics_custom.advanced.form:
   path: '/admin/config/simple_analytics_advanced_settings'
   defaults:
     _form: '\Drupal\simple_analytics_custom\Form\SimpleAnalyticsAdvancedConfigForm'
-    _title: 'Advanced Settings'
+    _title: 'Advanced settings'
   requirements:
     _permission: 'administer site configuration'  
 
