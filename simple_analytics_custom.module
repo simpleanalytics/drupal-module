@@ -10,7 +10,7 @@ use Drupal\Core\Render\Markup;
  * Insert JavaScript to the appropriate scope/region of the page.
  */
 function simple_analytics_custom_page_attachments(array &$page) {
-  \Drupal::service('cache.render')->invalidateAll();
+    \Drupal::service('page_cache_kill_switch')->trigger();
   $config = \Drupal::config('simple_analytics_custom.settings');
   $dataSaGlobal = $config->get('data_sa_global');
   $dataFullUrl = $config->get('data_full_urls');
@@ -20,7 +20,7 @@ function simple_analytics_custom_page_attachments(array &$page) {
   $emailClicks = $config->get('email_clicks');
   $download = $config->get('downloads');
   $outbound = $config->get('outbound_links');
-  $dataExtension = $config->get('data_extensions');
+  $dataExtension = $config->get('data_extension');
   $extent = '';
   if(isset($extent)){
     $extent = implode(", ",$dataExtension);
@@ -168,8 +168,8 @@ if($dataSaGlobal){
 
 }
 function simple_analytics_custom_page_top(array &$page_top) {
-  \Drupal::service('cache.render')->invalidateAll();
-   $config = \Drupal::config('simple_analytics_custom.settings');
+    \Drupal::service('page_cache_kill_switch')->trigger();
+  $config = \Drupal::config('simple_analytics_custom.settings');
   $customDomains = $config->get('overwrite_domain');
   $dataMode = $config->get('hash_mode');
   $ignorePages = $config->get('data_ignore_pages');
@@ -179,7 +179,6 @@ function simple_analytics_custom_page_top(array &$page_top) {
   $enabled = $config->get('enabling');
   $automatedEvents = $config->get('collected_automated_events');
   $extraSettings = $config->get('extrasettings');
-  $hostName = $config->get('data_hostname');
   $dataSaGlobal = $config->get('data_sa_global');
    $sub_script =  '';
     $extra = unserialize($extraSettings);
@@ -203,14 +202,11 @@ if($enabled == 1){
    if($dataMode == 1){
         $sub_script .= 'data-mode="hash" '; 
    }
-   if(!empty($hostName)){
-        $sub_script .= 'data-hostname="'.$hostName.'" ';
-   }
    if(!empty($dataSaGlobal)){
      $sub_script .= 'data-sa-global="'.$dataSaGlobal.'" ';
    }
    if(!empty($dataAutoCollectView)){
-     $sub_script .= 'data-auto-collect="'.$dataAutoCollectView.'" ';
+     $sub_script .= 'data-auto-collect="true"';
    }
    if(!empty($dataCollectDntTrack)){
      $sub_script .= 'data-collect-dnt="'.$dataCollectDntTrack.'" ';

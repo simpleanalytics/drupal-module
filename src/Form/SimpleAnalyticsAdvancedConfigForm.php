@@ -35,12 +35,12 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
     $form['advanced_settings'] = array(
       '#type' => 'details',
       '#title' => $this->t('Advanced Settings'),
-      '#open' => FALSE,
+      '#open' => TRUE,
     );
     $form['advanced_settings']['container'] = array(
       '#type' => 'fieldset',
-      '#title' => $this->t('Do Not Track Visits'),
-      '#open' => FALSE,
+      '#title' => $this->t('Do Not Track Visits <a href="https://docs.simpleanalytics.com/dnt">(docs)</a>'),
+      '#open' => TRUE,
     );
     $form['advanced_settings']['container']['do_not_track_visits'] = [
       '#type' => 'checkbox',
@@ -52,7 +52,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
     ];
      $form['advanced_settings']['ignore_container'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Ignore Admins'),
+      '#title' => $this->t('Ignore Admins <a href="https://docs.simpleanalytics.com/create-plugin">(docs)</a>'),
     ];
      $form['advanced_settings']['ignore_container']['ignore_admin'] = [
       '#type' => 'checkbox',
@@ -65,21 +65,13 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
     $form['advanced_settings']['data_ignore_pages'] = array(
       '#type' => 'textarea',
       '#description_display' => 'before',
-      '#title' => $this->t('Ignore Pages'),
+      '#title' => $this->t('Ignore Pages <a href="https://docs.simpleanalytics.com/ignore-pages">(docs)</a>'),
       '#description' => 'Not want to run Simple Analytics on certain pages? Enter them here.You can use asterisks to use on multiple pages.Default:empty.',
       '#default_value' => $config->get('data_ignore_pages'),
     );
-    $form['advanced_settings']['overwrite_domain'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Overwrite domain'),
-      '#required' => FALSE,
-      '#description_display' => 'before',
-      '#description' => 'Are you running your domain on different domain  than what is listed in Simple Analytics? Overwrite your domain here.Dfeault:empty.',
-      '#default_value' => $config->get('overwrite_domain'),
-    ];
      $form['advanced_settings']['hash_container'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Hash Mode'),
+      '#title' => $this->t('Hash Mode <a href="https://docs.simpleanalytics.com/hash-mode">(docs)</a>'),
     ];
     $form['advanced_settings']['hash_container']['hash_mode'] = [
       '#type' => 'checkbox',
@@ -91,7 +83,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
     ];
     $form['advanced_settings']['collect_pages_container'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Collect Page views'),
+      '#title' => $this->t('Collect Page views <a href="https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway">(docs)</a>'),
     ];
     $form['advanced_settings']['collect_pages_container']['collect_page_views'] = [
       '#type' => 'checkbox',
@@ -101,33 +93,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#description' => 'This is required to collect page views.If you only want to collect events,you can turn this feature off.Default:on.',
       '#default_value' =>  $config->get('collect_page_views'),
     ];
-    $form['advanced_settings']['data_hostname'] = [
-      '#type' => 'textfield',
-      '#description_display' => 'before',
-      '#title' => $this->t('Data hostname'),
-      '#required' => FALSE,
-      '#description' => 'You can overwrite the default domain name by specifying its hostname',
-      '#default_value' => $config->get('data_hostname'),
-    ];
-    $form['advanced_settings']['data_sa_global'] = [
-      '#type' => 'textfield',
-      '#description_display' => 'before',
-      '#title' => $this->t('Data sa global'),
-      '#required' => FALSE,
-      '#default_value' => $config->get('data_sa_global'),
-    ];
-    $form['advanced_settings']['enable_container'] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Enabled'),
-    ];
-    $form['advanced_settings']['enable_container']['enabling'] = [
-      '#type' => 'checkbox',
-      '#description_display' => 'before',
-      '#title' => $this->t('Enabled'),
-      '#required' => FALSE,
-      '#description' => 'Enabled the script',
-      '#default_value' => $config->get('enabling'),
-    ];
+ 
     $num_names = $form_state->get('num_names');
     $extraSettingsUnserializeCount = 1;
     $extraSettingsValues =  $config->get('extrasettings');
@@ -242,6 +208,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
   }
   public function submitForm(array &$form, FormStateInterface $form_state) 
   {
+    \Drupal::service('cache.render')->invalidateAll();
        $values = $form_state->getValues();
        $extraSettings = '';
        if(isset($values['extra_settings']['fieldset']['settings']) && !empty($values['extra_settings']['fieldset']['settings'])){
@@ -257,13 +224,10 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       }
       $dataIgnore = serialize($dataIgnorePages);
       $dataIgnores = unserialize($dataIgnore);
-      $config->set('overwrite_domain', $form_state->getValue('overwrite_domain'))
-      ->set('data_hostname', $form_state->getValue('data_hostname'))
-      ->set('data_sa_global', $form_state->getValue('data_sa_global'))
+      $config
       ->set('data_ignore_pages', $dataIgnores)
       ->set('do_not_track_visits', $form_state->getValue('do_not_track_visits'))
       ->set('collect_page_views', $form_state->getValue('collect_page_views'))
-      ->set('enabling', $form_state->getValue('enabling'))
       ->set('hash_mode', $form_state->getValue('hash_mode'))
       ->set('ignore_admin', $form_state->getValue('ignore_admin'))
       ->set('extrasettings', $extraSettings)

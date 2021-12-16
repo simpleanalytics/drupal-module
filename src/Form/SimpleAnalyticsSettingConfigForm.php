@@ -31,10 +31,11 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
+    \Drupal::service('cache.render')->invalidateAll();
     $config = $this->config('simple_analytics_custom.settings');
     $form['automated_events'] = [
       '#type' => 'details',
-      '#title' => $this->t('Automated Events'),
+      '#title' => $this->t('Automated Events <a href="https://docs.simpleanalytics.com/automated-events">(docs)</a>'),
       '#weight' => 1,
       '#open' => FALSE
       ,
@@ -51,7 +52,17 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
   );
+    $form['advanced_settings']['overwrite_domain'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Overwrite domain <a href="https://docs.simpleanalytics.com/bypass-ad-blockers">(docs)</a>'),
+      '#required' => FALSE,
+      '#description_display' => 'before',
+      '#description' => 'Are you running your domain on different domain  than what is listed in Simple Analytics? Overwrite your domain here.Dfeault:empty.',
+      '#default_value' => $config->get('overwrite_domain'),
+    ];
+    $form['#cache']['contexts'][] = 'session';
     $form['#cache'] = ['max-age' => 0];
+    $form_state->setCached(FALSE);
     return parent::buildForm($form, $form_state);
   }
 
@@ -62,7 +73,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
   {
       \Drupal::service('cache.render')->invalidateAll();
       $config =  $this->config('simple_analytics_custom.settings');
-      $dataExtensions = explode(",", $form_state->getValue('data_extensions'));
+      $dataExtensions = explode(",", $form_state->getValue('data_extension'));
       foreach ($dataExtensions as $key1 => $value1) {
         $dataExtensions[$key1] = $value1;
       }
@@ -72,7 +83,8 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
       ->set('outbound_links', $form_state->getValue('outbound_links'))
       ->set('downloads', $form_state->getValue('downloads'))
       ->set('email_clicks', $form_state->getValue('email_clicks'))
-      ->set('data_extensions', $dataExtensions)
+      ->set('data_extension', $dataExtensions)
+      ->set('overwrite_domain', $form_state->getValue('overwrite_domain'))
       ->save();
        parent::submitForm($form, $form_state);
    

@@ -35,11 +35,11 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
     $form['event_settings'] = array(
       '#type' => 'details',
       '#title' => $this->t('Event Settings'),
-      '#open' => FALSE,
+      '#open' => TRUE,
     );
     $form['event_settings']['automated_container'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Automated Events'),
+      '#title' => $this->t('Automated Events <a href="https://docs.simpleanalytics.com/automated-events">(docs)</a>'),
     ];
     $form['event_settings']['automated_container']['collected_automated_events'] = array(
     '#type'    => 'checkbox',
@@ -85,10 +85,10 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
          ),
        ),
     );
-   $form['event_settings']['automated_container']['data_extensions'] = array(
+   $form['event_settings']['automated_container']['data_extension'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Extensions'),
-        '#default_value' => $config->get('data_extensions'),
+        '#default_value' => $config->get('data_extension'),
         '#description_display' => 'before',
         '#description' => 'Select the extensions you want to count the download of.',
         '#maxlength' => 500,
@@ -105,33 +105,45 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
       );
      $form['event_settings']['global_container'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Data sa global'),
+      '#title' => $this->t('Sa global <a href="https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used">(docs)</a>'),
     ];
     $form['event_settings']['global_container']['data_sa_global'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Data sa global'),
+      '#title' => $this->t('Sa global'),
       '#required' => FALSE,
       '#default_value' => $config->get('data_sa_global'),
     ];
     $form['event_settings']['title_container'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Data Use Title'),
+      '#title' => $this->t('Use Title <a href="https://docs.simpleanalytics.com/automated-events">(docs)</a>'),
     ];
      $form['event_settings']['title_container']['data_use_title'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Data Use Title'),
+      '#title' => $this->t('Use Title'),
       '#required' => FALSE,
       '#default_value' => $config->get('data_use_title'),
     ];
      $form['event_settings']['url_container'] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Data Full Urls'),
+      '#title' => $this->t('Full Urls <a href="https://docs.simpleanalytics.com/automated-events">(docs)</a>'),
     ];
     $form['event_settings']['url_container']['data_full_urls'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Data Full Urls'),
+      '#title' => $this->t('Full Urls'),
       '#required' => FALSE,
       '#default_value' => $config->get('data_full_urls'),
+    ];
+    $form['advanced_settings']['enable_container'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Enabled'),
+    ];
+    $form['advanced_settings']['enable_container']['enabling'] = [
+      '#type' => 'checkbox',
+      '#description_display' => 'before',
+      '#title' => $this->t('Enabled'),
+      '#required' => FALSE,
+      '#description' => 'Enabled the script',
+      '#default_value' => $config->get('enabling'),
     ];
     $form['#cache'] = ['max-age' => 0];
     return parent::buildForm($form, $form_state);
@@ -143,8 +155,9 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) 
   {
+    \Drupal::service('cache.render')->invalidateAll();
       $config =  $this->config('simple_analytics_custom.settings');
-      $dataExtensions = explode(", ", $form_state->getValue('data_extensions'));
+      $dataExtensions = explode(", ", $form_state->getValue('data_extension'));
     foreach ($dataExtensions as $key1 => $value1) {
       $dataExtensions[$key1] = $value1;
     }
@@ -157,7 +170,8 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
       ->set('outbound_links', $form_state->getValue('outbound_links'))
       ->set('email_clicks', $form_state->getValue('email_clicks'))
       ->set('downloads', $form_state->getValue('downloads'))
-      ->set('data_extensions', $dataExtensions)
+      ->set('enabling', $form_state->getValue('enabling'))
+      ->set('data_extension', $dataExtensions)
       ->save();
        parent::submitForm($form, $form_state);
    
