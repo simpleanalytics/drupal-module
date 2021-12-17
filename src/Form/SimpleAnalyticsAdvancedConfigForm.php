@@ -64,7 +64,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#default_value' => $config->get('ignore_admin'),
     ];
     $form['advanced_settings']['data_ignore_pages'] = array(
-      '#type' => 'textarea',
+      '#type' => 'textfield',
       '#description_display' => 'before',
       '#title' => $this->t('Ignore Pages <a href="https://docs.simpleanalytics.com/ignore-pages">(docs)</a>'),
       '#description' => 'Not want to run Simple Analytics on certain pages? Enter them here. You can use asterisks to use on multiple pages. Default:empty.',
