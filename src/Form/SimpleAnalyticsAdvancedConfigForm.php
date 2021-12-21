@@ -48,7 +48,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#title' => $this->t('Do Not Track Visits'),
       '#required' => FALSE,
       '#description_display' => 'before',
-      '#description' => 'The Do Not Track setting requests that a web application disables either its tracking or cross-site tracking of an individual user. We do not do that ever,so you can select to collect those visits as well. Default: off ',
+      '#description' => 'The Do Not Track setting requests that a web application disables either its tracking or cross-site tracking of an individual user. We do not do that ever,so you can select to collect those visits as well. Default: off',
       '#default_value' => $config->get('do_not_track_visits'),
     ];
      $form['advanced_settings']['ignore_container'] = [
@@ -60,14 +60,14 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#title' => $this->t('Ignore Admins'),
       '#required' => FALSE,
       '#description_display' => 'before',
-      '#description' => 'When Drupal admins of the website are logged in,should we ignore them. If you check the box drupal (you) will be ignored. Default:On',
+      '#description' => 'When Drupal admins of the website are logged in, should we ignore them. If you check the box drupal (you) will be ignored. Default: on',
       '#default_value' => $config->get('ignore_admin'),
     ];
     $form['advanced_settings']['data_ignore_pages'] = array(
       '#type' => 'textfield',
       '#description_display' => 'before',
       '#title' => $this->t('Ignore Pages <a href="https://docs.simpleanalytics.com/ignore-pages">(docs)</a>'),
-      '#description' => 'Not want to run Simple Analytics on certain pages? Enter them here. You can use asterisks to use on multiple pages. Default:empty.',
+      '#description' => 'Not want to run Simple Analytics on certain pages? Enter them here. You can use asterisks to use on multiple pages. Default: empty.',
       '#default_value' => $config->get('data_ignore_pages'),
     );
      $form['advanced_settings']['hash_container'] = [
@@ -79,7 +79,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#title' => $this->t('Hash Mode'),
       '#required' => FALSE,
       '#description_display' => 'before',
-      '#description' => 'If your website use hash (#) navigation, turn this on. On most drupal websites this is not relevant. Default empty',
+      '#description' => 'If your website use hash (#) navigation, turn this on. On most drupal websites this is not relevant. Default: empty',
       '#default_value' => $config->get('hash_mode'),
     ];
     $form['advanced_settings']['collect_pages_container'] = [
@@ -91,7 +91,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       '#title' => $this->t('Collect Page views'),
       '#required' => FALSE,
       '#description_display' => 'before',
-      '#description' => 'This is required to collect page views. If you only want to collect events,you can turn this feature off. Default:on.',
+      '#description' => 'This is required to collect page views. If you only want to collect events, you can turn this feature off. Default: on',
       '#default_value' =>  $config->get('collect_page_views'),
     ];
  
@@ -119,7 +119,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
     $form['extra_settings'] = array(
           '#type' => 'details',
           '#title' => $this->t('Custom Settings'),
-          '#description' => 'Some settings that are newer in Simple Analytics that in this plugin you can add here. Default:empty.',
+          '#description' => 'Some settings that are newer in Simple Analytics that in this plugin you can add here. Default: empty',
           '#open' => FALSE,
         );
     $form['extra_settings']['#tree'] = TRUE;
