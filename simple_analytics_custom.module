@@ -20,7 +20,7 @@ function simple_analytics_custom_page_attachments(array &$page) {
   $emailClicks = $config->get('email_clicks');
   $download = $config->get('downloads');
   $outbound = $config->get('outbound_links');
-  $dataExtension = $config->get('data_extension');
+  $dataExtension = $config->get('data_extensions');
   $extent = '';
   if(isset($dataExtension) && !empty($dataExtension)){
     $extent = implode(", ",$dataExtension);

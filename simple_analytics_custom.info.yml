@@ -1,5 +1,5 @@
 name: Simple Analytics
-description: 'Simple Analytics module'
+description: "Simple Analytics module"
 core: 8.x
 core_version_requirement: ^8 || ^9
 type: module

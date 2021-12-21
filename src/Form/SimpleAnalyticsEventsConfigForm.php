@@ -47,7 +47,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
     '#type'    => 'checkbox',
     '#default_value' => 0,
     '#description_display' => 'before',
-    '#description' => 'It will track outbound links, email addresses clicks, and amount of download files(pdf,csv,docx,xlsx). Events will be appear on events page on simpleanalytics.com. Default: on',
+    '#description' => 'It will track outbound links, email addresses clicks, and amount of download files (pdf,csv,docx,xlsx). Events will be appear on events page on simpleanalytics.com. Default: on',
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
   );
@@ -87,10 +87,10 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
          ),
        ),
     );
-   $form['event_settings']['automated_container']['data_extension'] = array(
+   $form['event_settings']['automated_container']['data_extensions'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Extensions'),
-        '#default_value' => $config->get('data_extension'),
+        '#default_value' => $config->get('data_extensions'),
         '#description_display' => 'before',
         '#description' => 'Select the extensions you want to count the download of.',
         '#maxlength' => 500,
@@ -159,7 +159,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
   {
     \Drupal::service('cache.render')->invalidateAll();
       $config =  $this->config('simple_analytics_custom.settings');
-      $dataExtensions = explode(", ", $form_state->getValue('data_extension'));
+      $dataExtensions = explode(", ", $form_state->getValue('data_extensions'));
     foreach ($dataExtensions as $key1 => $value1) {
       $dataExtensions[$key1] = $value1;
     }
@@ -173,7 +173,7 @@ class SimpleAnalyticsEventsConfigForm extends ConfigFormBase {
       ->set('email_clicks', $form_state->getValue('email_clicks'))
       ->set('downloads', $form_state->getValue('downloads'))
       ->set('enabling', $form_state->getValue('enabling'))
-      ->set('data_extension', $dataExtensions)
+      ->set('data_extensions', $dataExtensions)
       ->save();
        parent::submitForm($form, $form_state);
    

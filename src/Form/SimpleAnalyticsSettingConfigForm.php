@@ -31,7 +31,6 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) 
   {
-
     $form['#attached']['library'][] = 'simple_analytics_custom/simple_analytics_custom.custom';
     \Drupal::service('cache.render')->invalidateAll();
     $config = $this->config('simple_analytics_custom.settings');
@@ -39,8 +38,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => $this->t('Automated Events <a href="https://docs.simpleanalytics.com/automated-events">(docs)</a>'),
       '#weight' => 1,
-      '#open' => FALSE
-      ,
+      '#open' => FALSE,
     ];
     $form['automated_events']['auto_container'] = [
       '#type' => 'fieldset',
@@ -50,7 +48,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
     '#type'    => 'checkbox',
     '#default_value' => 0,
     '#description_display' => 'before',
-    '#description' => 'It will track outbound links, email addresses clicks, and amount of download files(pdf,csv,docx,xlsx). Events will be appear on events page on simpleanalytics.com. Default: on',
+    '#description' => 'It will track outbound links, email addresses clicks, and amount of download files (pdf,csv,docx,xlsx). Events will be appear on events page on simpleanalytics.com. Default: on',
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
   );
@@ -75,7 +73,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
   {
       \Drupal::service('cache.render')->invalidateAll();
       $config =  $this->config('simple_analytics_custom.settings');
-      $dataExtensions = explode(",", $form_state->getValue('data_extension'));
+      $dataExtensions = explode(",", $form_state->getValue('data_extensions'));
       foreach ($dataExtensions as $key1 => $value1) {
         $dataExtensions[$key1] = $value1;
       }
@@ -85,7 +83,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
       ->set('outbound_links', $form_state->getValue('outbound_links'))
       ->set('downloads', $form_state->getValue('downloads'))
       ->set('email_clicks', $form_state->getValue('email_clicks'))
-      ->set('data_extension', $dataExtensions)
+      ->set('data_extensions', $dataExtensions)
       ->set('overwrite_domain', $form_state->getValue('overwrite_domain'))
       ->save();
        parent::submitForm($form, $form_state);

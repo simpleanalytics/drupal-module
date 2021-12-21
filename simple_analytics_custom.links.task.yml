@@ -15,5 +15,3 @@ simple_analytics_custom.events:
   title: Events
   base_route: simple_analytics_custom
   weight: 3
-
-

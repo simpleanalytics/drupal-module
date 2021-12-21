@@ -1,5 +1,5 @@
 simple_analytics_custom.settings:
-  title: 'Simple Analytics'
-  description: 'Configure and customize the Simple Analytics module.'
+  title: "Simple Analytics"
+  description: "Configure and customize the Simple Analytics module."
   route_name: simple_analytics_custom.settings.form
   parent: system.admin_config_system

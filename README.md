@@ -2,14 +2,14 @@
 
 ## Installation
 
-To install this module, place it in your modules folder and enable it on the 
+To install this module, place it in your modules folder and enable it on the
 modules page.
 
 - Path: `/admin/modules`
 - Clear the cache after installation.
 - Path: `admin/config/development/performance`
 
-Please note: All the files need to be placed inside this module folder (`simple_analytics_custom`) to make the module working on site.
+Please note: All the files must be placed inside this module folder (`simple_analytics_custom`) to make the module work on site.
 
 Docroot path of module should be: `/modules/custom/simple_analytics_custom`
 

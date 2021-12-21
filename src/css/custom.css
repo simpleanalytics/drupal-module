@@ -1,11 +1,11 @@
 .simple-analytics-custom-settings fieldset {
-    border: 0;
+  border: 0;
 }
 fieldset#edit-automated-container .fieldset-wrapper {
-    padding-left: 17px;
-    border-left: 2px solid;
+  padding-left: 17px;
+  border-left: 2px solid;
 }
 .js-form-item.form-item.js-form-type-textfield.form-type-textfield.js-form-item-data-extension.form-item-data-extension {
-    padding-left: 17px;
-    border-left: 2px solid;
+  padding-left: 17px;
+  border-left: 2px solid;
 }
