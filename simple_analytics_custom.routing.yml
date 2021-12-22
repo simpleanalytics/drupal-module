@@ -1,23 +1,23 @@
 simple_analytics_custom.settings.form:
   path: /admin/config/simple_analytics_settings
   defaults:
-    _form: "\Drupal\simple_analytics_custom\Form\SimpleAnalyticsSettingConfigForm"
-    _title: "Simple Analytics - Settings"
+    _form: \Drupal\simple_analytics_custom\Form\SimpleAnalyticsSettingConfigForm
+    _title: Simple Analytics - Settings
   requirements:
-    _permission: "administer_simple_analytics"
+    _permission: administer_simple_analytics
 
 simple_analytics_custom.advanced.form:
-  path: "/admin/config/simple_analytics_advanced_settings"
+  path: /admin/config/simple_analytics_advanced_settings
   defaults:
-    _form: "\Drupal\simple_analytics_custom\Form\SimpleAnalyticsAdvancedConfigForm"
-    _title: "Simple Analytics - Advanced settings"
+    _form: \Drupal\simple_analytics_custom\Form\SimpleAnalyticsAdvancedConfigForm
+    _title: Simple Analytics - Advanced settings
   requirements:
-    _permission: "administer site configuration"
+    _permission: administer site configuration
 
 simple_analytics_custom.events.form:
-  path: "/admin/config/simple_analytics_events"
+  path: /admin/config/simple_analytics_events
   defaults:
-    _form: "\Drupal\simple_analytics_custom\Form\SimpleAnalyticsEventsConfigForm"
-    _title: "Simple Analytics - Events"
+    _form: \Drupal\simple_analytics_custom\Form\SimpleAnalyticsEventsConfigForm
+    _title: Simple Analytics - Events
   requirements:
-    _permission: "administer site configuration"
+    _permission: administer site configuration

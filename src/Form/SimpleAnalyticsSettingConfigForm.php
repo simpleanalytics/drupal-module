@@ -38,7 +38,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => $this->t('Automated Events <a href="https://docs.simpleanalytics.com/automated-events">(docs)</a>'),
       '#weight' => 1,
-      '#open' => FALSE,
+      '#open' => TRUE,
     ];
     $form['automated_events']['auto_container'] = [
       '#type' => 'fieldset',

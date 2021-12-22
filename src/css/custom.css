@@ -1,11 +1,88 @@
 .simple-analytics-custom-settings fieldset {
   border: 0;
 }
-fieldset#edit-automated-container .fieldset-wrapper {
-  padding-left: 17px;
-  border-left: 2px solid;
-}
+
 .js-form-item.form-item.js-form-type-textfield.form-type-textfield.js-form-item-data-extension.form-item-data-extension {
   padding-left: 17px;
   border-left: 2px solid;
 }
+
+details#edit-event-settings summary,
+details#edit-advanced-settings summary,
+details#edit-extra-settings summary,
+details#edit-automated-events summary {
+    display: none;
+}
+
+details#edit-event-settings,
+details#edit-advanced-settings,
+details#edit-extra-settings,
+details#edit-automated-events {
+    border: none;
+    margin-bottom: 0;
+}
+
+#edit-event-settings fieldset,
+#edit-event-settings .details-wrapper,
+#edit-advanced-settings fieldset,
+#edit-advanced-settings .details-wrapper,
+#edit-extra-settings fieldset,
+#edit-extra-settings .details-wrapper,
+#edit-automated-events fieldset,
+#edit-automated-events .details-wrapper {
+    padding-left: 0;
+    margin: 0;
+}
+
+#edit-event-settings .form-type-checkbox div,
+#edit-advanced-settings .form-type-checkbox div,
+#edit-automated-events .form-type-checkbox div {
+    margin-bottom: 5px;
+}
+
+#edit-event-settings .form-type-checkbox,
+#edit-advanced-settings .form-type-checkbox,
+#edit-automated-events .form-type-checkbox {
+    margin-bottom: 15px;
+}
+
+#edit-event-settings .form-type-checkbox input,
+#edit-advanced-settings .form-type-checkbox input,
+#edit-automated-events .form-type-checkbox input {
+    position: relative;
+    top: 2px;
+}
+
+#edit-event-settings fieldset#edit-url-container,
+#edit-advanced-settings fieldset#edit-url-container {
+    padding-bottom: 0;
+}
+
+fieldset#edit-enable-container {
+	padding-left: 0;
+    margin: 0;
+}
+
+#edit-event-settings #edit-automated-container .fieldset-wrapper {
+    padding-left: 17px;
+    border-left: 2px solid;
+}
+
+
+@media (min-width: 768px) {
+	#edit-extra-settings-fieldset .form-wrapper {
+    	display: flex;
+	}
+
+	#edit-extra-settings-fieldset .form-wrapper .form-type-textfield input {
+	    max-width: 275px;
+	    margin-right: 15px;
+	}
+
+	#edit-extra-settings-fieldset .form-wrapper .form-submit {
+	    height: 30px;
+	    margin: 8px 0 0 0;
+	}
+}
+
+

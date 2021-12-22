@@ -9,21 +9,28 @@ use Drupal\Core\Render\Markup;
  *
  * Insert JavaScript to the appropriate scope/region of the page.
  */
+
 function simple_analytics_custom_page_attachments(array &$page) {
   \Drupal::service('page_cache_kill_switch')->trigger();
   $config = \Drupal::config('simple_analytics_custom.settings');
   $dataSaGlobal = $config->get('data_sa_global');
-  $dataFullUrl = $config->get('data_full_urls');
   $ignoreAdmins = $config->get('ignore_admin');
-  $dataTitle = $config->get('data_use_title');
+  $dataTitle = 'false';
+  if($config->get('data_use_title') == 1){
+    $dataTitle = 'true';
+  }
+  $dataFullUrl = 'false';
+  if($config->get('data_full_urls') == 1){
+    $dataTitle = 'true';
+  }
   $enabled = $config->get('enabling');
   $emailClicks = $config->get('email_clicks');
   $download = $config->get('downloads');
   $outbound = $config->get('outbound_links');
   $dataExtension = $config->get('data_extensions');
   $extent = '';
-  if(isset($dataExtension) && !empty($dataExtension)){
-    $extent = implode(", ",$dataExtension);
+  if(isset($dataExtension) && !empty($dataExtension) && is_array($dataExtension)){
+    $extent = implode(',' , $dataExtension);
   }
   
 $adminIgnore = false;
@@ -207,33 +214,33 @@ if($ignoreAdmins == 1){
 if($adminIgnore != true){
 if($enabled == 1){
    if($dataMode == 1){
-        $sub_script .= 'data-mode="hash" '; 
+        $sub_script .= ' data-mode="hash" '; 
    }
    if(!empty($dataSaGlobal)){
-     $sub_script .= 'data-sa-global="'.$dataSaGlobal.'" ';
+     $sub_script .= ' data-sa-global="'.$dataSaGlobal.'" ';
    }
    if(!empty($dataAutoCollectView)){
-     $sub_script .= 'data-auto-collect="true"';
+     $sub_script .= ' data-auto-collect="true"';
    }
    if(!empty($dataCollectDntTrack)){
-     $sub_script .= 'data-collect-dnt="'.$dataCollectDntTrack.'" ';
+     $sub_script .= ' data-collect-dnt="'.$dataCollectDntTrack.'" ';
    }
    if(!empty($ignorePages)){
-     $sub_script .= 'data-ignore-pages="'.$ignorePages.'" ';
+     $sub_script .= ' data-ignore-pages="'.$ignorePages.'" ';
    }
    if(!empty($sub_script_child)){
      $sub_script .= $sub_script_child;
    }
    $collectionScripts = '';
    if($dataAutoCollectView == 0){
-    $collectionScripts .= '<script>function saLoaded(){if (window.sa_pageview) window.sa_pageview(window.location.pathname)};</script>';
+    // $collectionScripts .= '<script>function saLoaded(){if (window.sa_pageview) window.sa_pageview(window.location.pathname)};</script>';
      $collectionScripts .= '<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>';
-     $sub_script .= 'onload="saLoaded()"';
-     $sub_script .= 'data-auto-collect="false" ';
+     $sub_script .= ' onload="saLoaded()"';
+     $sub_script .= ' data-auto-collect="false" ';
    }
   $autoscript_tag_markup = '';
   if($automatedEvents == 1){
-  $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src=https://scripts.simpleanalyticscdn.com/plus.js ></script>';
+  $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src="https://scripts.simpleanalyticscdn.com/plus.js" ></script>';
   }elseif($customDomains){
   $noscript_tag_markup = '<script ' .$sub_script. ' async defer src=https://'.$customDomains.'/latest.js></script>';
   $noscript_tag_markup .= '<noscript><img src="https://'.$customDomains.'/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>';
@@ -241,7 +248,7 @@ if($enabled == 1){
        $page_top['page_top'][]['#markup'] =  Markup::create($noscript_tag_markup);
     }
   }else{
-    $embed_script = '<script ' .$sub_script. ' async defer src=https://scripts.simpleanalyticscdn.com/latest.js></script>';
+    $embed_script = '<script ' .$sub_script. ' async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>';
     if(isset($embed_script)){
        $page_top['page_top'][]['#markup'] =  Markup::create($embed_script);
     }
