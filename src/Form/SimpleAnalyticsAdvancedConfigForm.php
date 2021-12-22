@@ -120,7 +120,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
           '#type' => 'details',
           '#title' => $this->t('Custom Settings'),
           '#description' => 'Some settings that are newer in Simple Analytics that in this plugin you can add here. Default: empty',
-          '#open' => FALSE,
+          '#open' => TRUE,
         );
     $form['extra_settings']['#tree'] = TRUE;
     $form['extra_settings']['fieldset'] = [
