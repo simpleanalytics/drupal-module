@@ -51,7 +51,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
     '#description' => 'It will track outbound links, email addresses clicks, and amount of download files (pdf,csv,docx,xlsx). Events will be appear on events page on simpleanalytics.com. Default: on',
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
-  );
+    );
     $form['advanced_settings']['overwrite_domain'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Overwrite domain <a href="https://docs.simpleanalytics.com/bypass-ad-blockers">(docs)</a>'),
@@ -79,12 +79,12 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
       }
       $config =  $this->config('simple_analytics_custom.settings');
       $config
+      ->set('overwrite_domain', $form_state->getValue('overwrite_domain'))
       ->set('collected_automated_events', $form_state->getValue('collected_automated_events'))
       ->set('outbound_links', $form_state->getValue('outbound_links'))
       ->set('downloads', $form_state->getValue('downloads'))
       ->set('email_clicks', $form_state->getValue('email_clicks'))
       ->set('data_extensions', $dataExtensions)
-      ->set('overwrite_domain', $form_state->getValue('overwrite_domain'))
       ->save();
        parent::submitForm($form, $form_state);
    

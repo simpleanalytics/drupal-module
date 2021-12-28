@@ -21,7 +21,7 @@ function simple_analytics_custom_page_attachments(array &$page) {
   }
   $dataFullUrl = 'false';
   if($config->get('data_full_urls') == 1){
-    $dataTitle = 'true';
+    $dataFullUrl = 'true';
   }
   $enabled = $config->get('enabling');
   $emailClicks = $config->get('email_clicks');
@@ -181,7 +181,11 @@ function simple_analytics_custom_page_top(array &$page_top) {
   $dataMode = $config->get('hash_mode');
   $ignorePages = $config->get('data_ignore_pages');
   $ignoreAdmins = $config->get('ignore_admin');
-  $dataCollectDntTrack = $config->get('do_not_track_visits');
+
+  $dataCollectDntTrack = 'false';
+  if($config->get('do_not_track_visits') == 1){
+    $dataCollectDntTrack = 'true';
+  }
   $dataAutoCollectView = $config->get('collect_page_views');
   $enabled = $config->get('enabling');
   $automatedEvents = $config->get('collected_automated_events');
@@ -240,7 +244,12 @@ if($enabled == 1){
    }
   $autoscript_tag_markup = '';
   if($automatedEvents == 1){
-  $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src="https://scripts.simpleanalyticscdn.com/plus.js" ></script>';
+    if($customDomains){
+      $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src="https://'.$customDomains.'/plus.js" ></script>';
+      $collectionScripts = '<noscript><img src="https://'.$customDomains.'/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>';
+    }else{
+      $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src="https://scripts.simpleanalyticscdn.com/plus.js" ></script>';
+    }
   }elseif($customDomains){
   $noscript_tag_markup = '<script ' .$sub_script. ' async defer src=https://'.$customDomains.'/latest.js></script>';
   $noscript_tag_markup .= '<noscript><img src="https://'.$customDomains.'/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>';
