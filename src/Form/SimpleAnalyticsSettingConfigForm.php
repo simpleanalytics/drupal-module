@@ -52,13 +52,13 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
     '#title'   => t('Collect Automated Events'),
     '#default_value' => $config->get('collected_automated_events'),
     );
-    $form['advanced_settings']['overwrite_domain'] = [
+    $form['advanced_settings']['custom_domain'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Overwrite domain <a href="https://docs.simpleanalytics.com/bypass-ad-blockers">(docs)</a>'),
+      '#title' => $this->t('Custom domain <a href="https://docs.simpleanalytics.com/bypass-ad-blockers">(docs)</a>'),
       '#required' => FALSE,
       '#description_display' => 'before',
-      '#description' => 'Are you running your domain on different domain than what is listed in Simple Analytics? Overwrite your domain here. Default: empty',
-      '#default_value' => $config->get('overwrite_domain'),
+      '#description' => 'Are you running your domain on different domain than what is listed in Simple Analytics? Custom your domain here. Default: empty',
+      '#default_value' => $config->get('custom_domain'),
     ];
     $form['#cache']['contexts'][] = 'session';
     $form['#cache'] = ['max-age' => 0];
@@ -79,7 +79,7 @@ class SimpleAnalyticsSettingConfigForm extends ConfigFormBase {
       }
       $config =  $this->config('simple_analytics_custom.settings');
       $config
-      ->set('overwrite_domain', $form_state->getValue('overwrite_domain'))
+      ->set('custom_domain', $form_state->getValue('custom_domain'))
       ->set('collected_automated_events', $form_state->getValue('collected_automated_events'))
       ->set('outbound_links', $form_state->getValue('outbound_links'))
       ->set('downloads', $form_state->getValue('downloads'))

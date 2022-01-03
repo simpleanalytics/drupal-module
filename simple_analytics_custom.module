@@ -177,7 +177,8 @@ if($dataSaGlobal){
 function simple_analytics_custom_page_top(array &$page_top) {
     \Drupal::service('page_cache_kill_switch')->trigger();
   $config = \Drupal::config('simple_analytics_custom.settings');
-  $customDomains = $config->get('overwrite_domain');
+  $customDomains = $config->get('custom_domain');
+  $overrideDomains = $config->get('overwrite_domain');
   $dataMode = $config->get('hash_mode');
   $ignorePages = $config->get('data_ignore_pages');
   $ignoreAdmins = $config->get('ignore_admin');
@@ -232,6 +233,9 @@ if($enabled == 1){
    if(!empty($ignorePages)){
      $sub_script .= ' data-ignore-pages="'.$ignorePages.'" ';
    }
+   if(!empty($overrideDomains)){
+     $sub_script .= ' data-hostname="'.$overrideDomains.'" ';
+   }
    if(!empty($sub_script_child)){
      $sub_script .= $sub_script_child;
    }
@@ -245,13 +249,13 @@ if($enabled == 1){
   $autoscript_tag_markup = '';
   if($automatedEvents == 1){
     if($customDomains){
-      $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src="https://'.$customDomains.'/plus.js" ></script>';
+      $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src="https://'.$customDomains.'/plus.js"></script>';
       $collectionScripts = '<noscript><img src="https://'.$customDomains.'/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>';
     }else{
       $autoscript_tag_markup = '<script ' .$sub_script. ' async defer src="https://scripts.simpleanalyticscdn.com/plus.js" ></script>';
     }
   }elseif($customDomains){
-  $noscript_tag_markup = '<script ' .$sub_script. ' async defer src=https://'.$customDomains.'/latest.js></script>';
+  $noscript_tag_markup = '<script ' .$sub_script. ' async defer src="https://'.$customDomains.'/latest.js"></script>';
   $noscript_tag_markup .= '<noscript><img src="https://'.$customDomains.'/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>';
     if(isset($noscript_tag_markup)){
        $page_top['page_top'][]['#markup'] =  Markup::create($noscript_tag_markup);

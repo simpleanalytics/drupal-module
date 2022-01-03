@@ -172,6 +172,14 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       // }
       
     }
+    $form['advanced_settings']['overwrite_domain'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Overwrite domain <a href="https://docs.simpleanalytics.com/overwrite-domain-name">(docs)</a>'),
+      '#required' => FALSE,
+      '#description_display' => 'before',
+      '#description' => 'Are you running your domain on different domain than what is listed in Simple Analytics? Overwrite your domain here. Default: empty',
+      '#default_value' => $config->get('overwrite_domain'),
+    ];
 
     $form['extra_settings']['fieldset']['actions'] = [
       '#type' => 'actions',
@@ -227,6 +235,7 @@ class SimpleAnalyticsAdvancedConfigForm extends ConfigFormBase {
       $dataIgnores = unserialize($dataIgnore);
       $config
       ->set('data_ignore_pages', $dataIgnores)
+      ->set('overwrite_domain', $form_state->getValue('overwrite_domain'))
       ->set('do_not_track_visits', $form_state->getValue('do_not_track_visits'))
       ->set('collect_page_views', $form_state->getValue('collect_page_views'))
       ->set('hash_mode', $form_state->getValue('hash_mode'))
