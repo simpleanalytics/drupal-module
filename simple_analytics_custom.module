@@ -203,7 +203,7 @@ function simple_analytics_custom_page_top(array &$page_top) {
          $sub_script_child .= $extraKey;
        }
        if(!empty($extraValue)){
-         $sub_script_child .= ' = "'.$extraValue.'" ';
+         $sub_script_child .= '="'.$extraValue.'" ';
        }
     }
   }
